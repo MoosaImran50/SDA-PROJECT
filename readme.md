@@ -7,7 +7,7 @@ Instructions:
 
 -Main code file contains our starting screen as well as the code generated against the class diagram.
 
--In order to run main code file, header files from header folder and resource files from resource folder must be  included in the project.
+-In order to run main code file, header files from header folder and resource files from resource folder must be included in the project.
 
 -Our starting screen consists of title, then it asks wheather the user is customer or a part of management.
 
