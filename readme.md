@@ -14,3 +14,20 @@ Instructions:
 -If the option "Customer" is chosen, customer is directed to login screen.
 
 -If the option "Management" is chosen, we then ask for their managerial position.
+
+
+Functionalities implemented:-
+
+->Customer SignIn
+
+->Customer SignUp
+
+->View Dashboard
+
+->Update Mileage
+
+->Book Appointment
+
+->Outlet Admin SignIn
+
+->Manage Outlet: Create, Block, Delete, and Update
