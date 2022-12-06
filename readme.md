@@ -1,4 +1,4 @@
-Instructions:
+**Instructions:**
 
  <br />
 
@@ -18,7 +18,7 @@ Instructions:
 
 <br />
 
-Functionalities implemented:-
+**Functionalities implemented:**
 
 <br />
 
