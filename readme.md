@@ -1,6 +1,6 @@
 Instructions:
 
- \ 
+ <br />
 
 -There are 3 different folders: "Header", "Resource", and "Main Code".
 
@@ -16,11 +16,11 @@ Instructions:
 
 -If the option "Management" is chosen, we then ask for their managerial position.
 
- \ 
+<br />
 
 Functionalities implemented:-
 
- \ 
+<br />
 
 ->Customer SignIn
 
