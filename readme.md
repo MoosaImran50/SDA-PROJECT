@@ -48,4 +48,4 @@
 
 <br />
 
-**P.S.**: Increased reusability by adding generalized functions.
+**P.S.** Increased reusability by adding generalized functions.
