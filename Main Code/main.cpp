@@ -12,7 +12,11 @@
 			
 using namespace std;
 
-void readingFile(string fileArr[20],int& totalCount,string filename)
+//Patterns used: Singleton pattern and Factory Method pattern
+//Also made sure to increase flexibility by using generalized functions
+
+
+void readingFile(string fileArr[20],int& totalCount,string filename)	//Populates given array from given filename
 {
 	string line;
 	ifstream readfile(filename);
@@ -23,16 +27,16 @@ void readingFile(string fileArr[20],int& totalCount,string filename)
 		count++;
 	}
 	totalCount=count;
-}
+}		
 
-void saveOutlet(string outletid,string location,int status)
+void saveOutlet(string outletid,string location,int status)		//Saves single outlet in file
 {
 	ofstream writefile("Outlets.txt");
 	writefile<<outletid<<","<<location<<","<<status<<endl;
 	writefile.close();
 }
 
-bool compareStr(string str1,string str2)
+bool compareStr(string str1,string str2)	//Comapares 2 strings
 {
 	bool same=true;
 	int l1,l2,size;
@@ -49,7 +53,7 @@ bool compareStr(string str1,string str2)
 	return same;
 }
 
-bool checkStaffAvailability()
+bool checkStaffAvailability()		//Tells if any staff available or not
 {
 	bool anyoneFree=false;
 	string line;
@@ -65,7 +69,7 @@ bool checkStaffAvailability()
 	return anyoneFree;
 }
 
-bool getDetail(string id,string filename,string detailStr[],int& totalBookings)
+bool getDetail(string id,string filename,string detailStr[],int& totalBookings)		//Give detials about bookings
 {
 	string line;
 	string idstr;
@@ -92,7 +96,7 @@ bool getDetail(string id,string filename,string detailStr[],int& totalBookings)
 	return idfound;
 }
 
-class user
+class user			//Customer class
 {
 	int points;
 	int expenditure;
@@ -219,7 +223,7 @@ public:
 			}
 			cout<<"Booking successful!"<<endl;
 
-			cout<<"Press 1 to get prediction cost"<<endl;
+			cout<<"Press 1 to get prediction cost"<<endl;			//Predicting the cost of work based on mileage
 			cin>>choice;
 			if(choice==1)
 			{
@@ -242,7 +246,7 @@ public:
 			cout<<"Sorry! Staff is not available"<<endl;
 		}
 	}
-	void updateMileage()
+	void updateMileage()		//Updataes customer's car mileage and edits dashbpoard+file
 	{
 		string line,cutId,customerLine;
 		bool validMil=false;
@@ -419,7 +423,7 @@ public:
 	};
 };
 
-class outlet
+class outlet		//Main class that is composed of other objects but those functionalities aren't used here that much
 {
 	string outletId;
 	string location;
@@ -446,15 +450,15 @@ public:
 	}
 };
 
-class outletAdmin		//Singleton as we allow only one outletadmin
+class outletAdmin		//Admin who controls all outlets
 {
 	string oname;
 	string oemail;
 	string opass;
 
-	static outletAdmin* instance;
+	static outletAdmin* instance;		//Using singleton pattern as we dont allow more than one outletadmin
 
-	outletAdmin()
+	outletAdmin()		//Default constructor to fill outlet data from file
 	{
 		string line;
 		ifstream readfile("outletAdmin.txt");
@@ -471,13 +475,15 @@ class outletAdmin		//Singleton as we allow only one outletadmin
 	}
 
 public:
-	static outletAdmin* getInstance() {
-		if (instance ==  nullptr) {
+	static outletAdmin* getInstance()		//Singleton pattern used
+	{
+		if (instance ==  nullptr) 
+		{
 			instance = new outletAdmin;
 			return instance;
 		}
 	}
-	bool validatePass(string password)
+	bool validatePass(string password)		//Tells if the password is valid or not
 	{
 		if (compareStr(password, opass) == true)
 		{
@@ -485,30 +491,17 @@ public:
 		}
 		return false;
 	}
-	outlet* createOutlet(string outletId, string location)		//We are sending object so its factory pattern
+	outlet* createOutlet(string outletId, string location)		//Outlet's object is made in outlet admin class and is then sent so its factory method
 	{
 		outlet outletObj(outletId, location, 1, 1, 1, 1, 1, 1, 1, 1, "W", "we", "wp", "f", "fe", "fp", "c", "cp");
-
-		/*
-		-------Add code to add outlet details to file------
-		*/
-
-		//saveOutlet(outletId,location,1);
 
 		int totalOutlets;
 		string outletarr[20], line;
 		readingFile(outletarr, totalOutlets, "Outlets.txt");		//Calling function to fill array with outlets from file
-		cout << "Total outlets:" << totalOutlets << endl;
-		for (int i = 0; i < totalOutlets; i++)
-		{
-			cout << outletarr[i] << endl;
-		}
 
 		line = outletId + "," + location + ",1";
 		outletarr[totalOutlets] = line;
 		totalOutlets++;
-		cout << "Line:" << line << endl;
-		cout << "Line after:" << outletarr[totalOutlets] << endl;
 		for (int i = 0; i < totalOutlets; i++)
 		{
 			cout << outletarr[i] << endl;
@@ -523,10 +516,8 @@ public:
 
 		return &outletObj;
 	};
-	bool updateOutlet(string id, string location)
+	bool updateOutlet(string id, string location)		//Update the location of the outlet whose id is provided
 	{
-		//have to check how to update values of object Outlet through outlet admin
-
 		bool idfound = false;
 		int totalOutlets, len = 0, pos;
 		string outletarr[20], line, cutId;
@@ -554,8 +545,6 @@ public:
 
 		if (idfound == false)
 			return false;
-
-		cout << "Pos:" << pos << endl;
 
 		string status, newline;
 		int size, start;
@@ -585,8 +574,8 @@ public:
 		writefile.close();
 		return idfound;
 
-	}
-	bool deleteOutlet(string id)
+	}	
+	bool deleteOutlet(string id)		//Permanently delete an outlet using its id
 	{
 		bool idfound = false;
 		int totalOutlets, len = 0, pos;
@@ -633,7 +622,7 @@ public:
 		writefile.close();
 		return idfound;
 	}
-	bool blockOutlet(string id)
+	bool blockOutlet(string id)		//Change the status of outlet to blocked
 	{
 		int totalOutlets, len = 0, pos;
 		string outletarr[20], line, cutId;
@@ -706,9 +695,9 @@ void drawcarmenu(int x,int y,int carcolor)	//This function draws the menu where 
 	COLORREF tcolor;
 
 	if(carcolor==1)
-		tcolor = RGB (29,104,142);		//Chooses yellow color for taxi
+		tcolor = RGB (29,104,142);		
 	else if(carcolor==2)
-		tcolor = RGB (200,0,0);			//Chooses red color for car
+		tcolor = RGB (200,0,0);			
 
 	myRect(x-50,y-25,x+50,y+25,tcolor,tcolor);		//Draws upper half of car
 	myRect(x-100,y,x+100,y+50,tcolor,tcolor);		//Draws lower half of car
@@ -716,7 +705,7 @@ void drawcarmenu(int x,int y,int carcolor)	//This function draws the menu where 
 	myEllipse(x+20,y+40,x+55,y+75,black,black);		//Draws right tyre of car
 }
 
-bool checkCustomer(string id,string pass,string& customerLine)
+bool checkCustomer(string id,string pass,string& customerLine)  //Check if customer details are valid
 {
 	string str;
 	string idstr;
@@ -771,7 +760,7 @@ bool checkCustomer(string id,string pass,string& customerLine)
 	return validCustomer;	
 }
 
-bool checknewId(string id,string filename)
+bool checknewId(string id,string filename)		//Confirms that the id chosen is not already in use
 {
 	string line;
 	string cutId;
@@ -789,7 +778,7 @@ bool checknewId(string id,string filename)
 	return true;
 }
 
-void convertVariables(string customerLine,string& cName,string& cEmail,string& cPhone,string& cID,string& lastUpdated,string& cPass,double& cAvg,double& cMileage,int& cPoints,int& expenditure)
+void convertVariables(string customerLine,string& cName,string& cEmail,string& cPhone,string& cID,string& lastUpdated,string& cPass,double& cAvg,double& cMileage,int& cPoints,int& expenditure) //Converts variables read from file to their original data types
 {
 	int start=0,len,commacount=0;
 	string subLine;
@@ -854,7 +843,7 @@ void convertVariables(string customerLine,string& cName,string& cEmail,string& c
 	}
 }
 
-void addCustomer(string cName,string cEmail,string cPhone,string cID, string cPass)
+void addCustomer(string cName,string cEmail,string cPhone,string cID, string cPass)		//Used to add a new customer to system and file upon signup
 {
 	string customerArr[20];
 	string str;
@@ -881,7 +870,7 @@ outletAdmin* outletAdmin::instance = nullptr;
 
 int main()
 {
-	COLORREF grey = RGB(128,128,128);
+	COLORREF grey = RGB(128,128,128);			//Colors defined to be used in graphics
 	COLORREF white = RGB(255,255,255);
 	COLORREF black = RGB(00,00,00);
 	COLORREF text = RGB(64,128,128);
@@ -892,14 +881,15 @@ int main()
 	COLORREF red = RGB(255,0,0);
 	COLORREF manag = RGB(255,155,0);
 	COLORREF custom = RGB(250,65,0);
+	COLORREF red1 = RGB(250,16,12);
 
 
-	/*for(int i=0;i<200;i=i+2)
+	for(int i=0;i<200;i=i+2)			//Starting screen
 	{
 		COLORREF grey = RGB(i,i,i);
 		myDrawTextWithFont(220,140,150," SJ Motors ",black,grey);
 		Sleep(50);
-	}*/
+	}
 
 	drawcarmenu(110,200,1);
 	drawcarmenu(850,200,2);
@@ -909,14 +899,12 @@ int main()
 	myDrawText(400,450,10,"Press any key to continue",black,black);
 	myDrawTextWithFont(0,140,300," SJ Motors ",black,black);
 
-
-	//outletAdmin OAobj;			//Creating outlet admin	
 	inventoryManager IMobj;		//Creating inventory manager
 	outlet* outletArr;			//Creating outlet array which will be filled by outletadmin upon calling createOutlet function
 
 	int option;
 
-	//Sleep(2000);
+	Sleep(1000);
 
 	bool exit1=false;
 
@@ -931,10 +919,9 @@ int main()
 		mycursor.Y=13;
 		SetConsoleCursorPosition(myconsole,mycursor);
 
-		myDrawTextWithFont(10,70,30,"Select customer or management:",white,black);
 		myDrawTextWithFont(10,100,30,"1-Customer",custom,black);
 		myDrawTextWithFont(10,130,30,"2-Management",manag,black);
-		myDrawTextWithFont(10,160,30,"3-Exit System",manag,black);
+		myDrawTextWithFont(10,160,30,"3-Exit System",red1,black);
 
 		string pass;
 		string id;
@@ -952,7 +939,6 @@ int main()
 		if(option==2)
 		{
 			myDrawTextWithFont(200,0,50,"------ Management System ------",black,white);
-			//myDrawTextWithFont(10,40,40,"----Enter a number----",white,black);
 			myDrawTextWithFont(10,100,30,"1-Outlet Admin",manag,black);
 			myDrawTextWithFont(10,130,30,"2-Inventory Manager",manag,black);
 			myDrawTextWithFont(10,160,30,"3-Workshop Manager",manag,black);
@@ -963,7 +949,6 @@ int main()
 			mycursor.X=0;			
 			mycursor.Y=20;
 			SetConsoleCursorPosition(myconsole,mycursor);
-			//cout<<"1 for outlet admin"<<endl;
 			cin>>choice;
 			if(choice==1)
 			{
@@ -979,8 +964,8 @@ int main()
 						mycursor.X=0;			
 						mycursor.Y=7;
 						SetConsoleCursorPosition(myconsole,mycursor);
-
-						outletAdmin* OAobj = OAobj->getInstance();
+																			//Using singleton pattern as we dont allow more than one outletadmin
+						outletAdmin* OAobj = OAobj->getInstance();			//Creating outlet admin	
 						myDrawTextWithFont(200,0,50,"------ Outlet Admin Login ------",black,manag);
 						myDrawTextWithFont(5,65,30,"Enter Password : ",white,black);
 						getline(cin,adminpass);
@@ -998,7 +983,6 @@ int main()
 								SetConsoleCursorPosition(myconsole,mycursor);
 								adminlogin=true;
 								myDrawTextWithFont(200,0,50,"------ Outlet Admin Menu ------",black,manag);
-								//myDrawTextWithFont(10,40,35,"----Enter a number----",white,black);
 								myDrawTextWithFont(20,70,30,"1-Create Outlet",white,black);
 								myDrawTextWithFont(20,100,30,"2-Delete Outlet",white,black);
 								myDrawTextWithFont(20,130,30,"3-Update Outlet",white,black);
@@ -1008,13 +992,6 @@ int main()
 								myDrawTextWithFont(620,70,30,"7-View Customers",white,black);
 								myDrawTextWithFont(620,100,30,"8-Logout",white,black);
 
-								/*cout<<"1-Create Outlet"<<endl;
-								cout<<"2-Delete Outlet"<<endl;
-								cout<<"3-Update Outlet"<<endl;
-								cout<<"4-Block Outlet"<<endl;
-								cout<<"5-View Customers"<<endl;
-								cout<<"6-View Bookings"<<endl;
-								cout<<"7-View Outlets"<<endl;*/
 								cin>>choice2;
 								if(choice2==1)
 								{
@@ -1029,7 +1006,6 @@ int main()
 										SetConsoleCursorPosition(myconsole,mycursor);
 										myDrawTextWithFont(200,0,50,"------ Create Outlet ------",black,manag);
 										myDrawTextWithFont(10,70,25,"Enter a 3 digit outlet ID",white,black);
-										//cout<<endl<<"Enter a 3 digit outlet ID:";
 										getline(cin,outletid);
 										if(outletid.size()==3)
 										{
@@ -1049,7 +1025,6 @@ int main()
 									mycursor.Y=11;
 									SetConsoleCursorPosition(myconsole,mycursor);
 									myDrawTextWithFont(10,130,25,"Enter outlet's location",white,black);
-									//cout<<"Enter outlet's location:";
 									getline(cin,location);
 
 									outletArr=OAobj->createOutlet(outletid,location);
@@ -1064,7 +1039,6 @@ int main()
 									SetConsoleCursorPosition(myconsole,mycursor);
 									myDrawTextWithFont(200,0,50,"------ Delete Outlet ------",black,manag);
 									myDrawTextWithFont(10,70,25,"Enter id of outlet to delete",white,black);
-									//cout<<"Enter id of outlet to delete:";
 									getline(cin,outletid);
 				
 									if(OAobj->deleteOutlet(outletid)==false)
@@ -1082,14 +1056,12 @@ int main()
 									myDrawTextWithFont(200,0,50,"------ Update Outlet ------",black,manag);
 									myDrawTextWithFont(10,70,25,"Enter id of outlet to update",white,black);
 									string outletid,location;
-									//cout<<"Enter id of outlet to update:";
 									getline(cin,outletid);
 
 									mycursor.X=0;			
 									mycursor.Y=10;
 									SetConsoleCursorPosition(myconsole,mycursor);
 									myDrawTextWithFont(10,130,25,"Enter outlet's new location",white,black);
-									//cout<<"Enter outlet's new location:";
 									getline(cin,location);
 
 									if(OAobj->updateOutlet(outletid,location)==false)
@@ -1107,7 +1079,6 @@ int main()
 									myDrawTextWithFont(200,0,50,"------ Block Outlet ------",black,manag);
 									myDrawTextWithFont(10,70,25,"Enter id of outlet to block",white,black);
 									string outletid;
-									//cout<<"Enter id of outlet to block:";
 									getline(cin,outletid);
 
 									if(OAobj->blockOutlet(outletid)==false)
@@ -1122,8 +1093,6 @@ int main()
 									mycursor.Y=5;
 									SetConsoleCursorPosition(myconsole,mycursor);
 									myDrawTextWithFont(200,0,50,"------ List of Outlets ------",black,manag);
-									//myDrawTextWithFont(10,70,25,"-ID-Location-Status-",white,black);
-									//cout<<"-----List of all outlets-----"<<endl;
 									cout<<"-ID-Location-Status-"<<endl<<endl;
 									string outletarr[20];
 									int totalOutlets=0;
@@ -1140,7 +1109,6 @@ int main()
 									mycursor.Y=5;
 									SetConsoleCursorPosition(myconsole,mycursor);
 									myDrawTextWithFont(200,0,50,"-----List of Bookings-----",black,manag);
-									//cout<<"-----List of all Bookings-----"<<endl;
 									cout<<endl<<"-ID--Payment Method--Date"<<endl<<endl;
 									string bookingArr[20];
 									int totalBookings=0;
@@ -1156,8 +1124,6 @@ int main()
 									mycursor.X=0;			
 									mycursor.Y=7;
 									SetConsoleCursorPosition(myconsole,mycursor);
-									//cout<<"-----List of all Customers-----"<<endl;
-									//cout<<"ID-Points-Mileage-DailyAvg-Expenditure-Name-Email-Password-LastUpdated-PhoneNum"<<endl<<endl;
 									string customerArr[20];
 									int totalCustomers=0;
 									readingFile(customerArr,totalCustomers,"Customers.txt");
@@ -1206,7 +1172,6 @@ int main()
 						myDrawTextWithFont(10,70,25,"Enter your id",white,black);
 						string customerLine;
 						cin.ignore();
-						//cout<<"Enter your id"<<endl;
 						getline(cin,id);
 
 
@@ -1214,7 +1179,6 @@ int main()
 						mycursor.Y=11;
 						SetConsoleCursorPosition(myconsole,mycursor);
 						myDrawTextWithFont(10,140,25,"Enter your password",white,black);
-						//cout<<"Enter your password"<<endl;
 						getline(cin,pass);
 
 						if(checkCustomer(id,pass,customerLine)==true)
@@ -1226,7 +1190,6 @@ int main()
 
 							myDrawTextWithFont(10,190,25,"Login succesful!",white,black);
 							getch();
-							//cout<<"Login succesful"<<endl;
 
 							bool exit4=false;
 							while(exit4==false)
@@ -1324,7 +1287,6 @@ int main()
 					}
 				}
 			}
-			//myDrawTextWithFont(240,0,50,"------ Customer Sign In ------",black,white);
 		}
 		else if(option==3)
 		{
