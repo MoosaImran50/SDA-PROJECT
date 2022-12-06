@@ -35,3 +35,17 @@
 ->Outlet Admin SignIn
 
 ->Manage Outlet: Create, Block, Delete, and Update
+
+<br />
+
+**Design Patterns Used:**
+
+<br />
+
+->Singleton Method
+
+->Factory Method
+
+<br />
+
+**P.S.**: Increased reusability by adding generalized functions.
